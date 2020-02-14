@@ -1,0 +1,4 @@
+#!/bin/sh
+
+exec /init/wait-for-it localhost:9200 -- /init/setup &
+exec $@ 

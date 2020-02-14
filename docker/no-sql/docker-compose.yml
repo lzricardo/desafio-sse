@@ -1,0 +1,44 @@
+version: "2.1"
+
+services:
+  no-sql:
+    image: mongo
+    container_name: no-sql-db
+    volumes:
+    - ../../data/no-sql:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=kenoby
+      - MONGO_INITDB_ROOT_PASSWORD=12345
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+    healthcheck:
+      test:
+      - CMD
+      - mongo
+      - --eval
+      - "db.adminCommand('ping')"
+  import:
+    image: mongo
+    volumes:
+      - ./import:/seed/import.sh
+      - ../../data/applicants.json:/seed/applicants.json
+      - ../../data/positions.json:/seed/positions.json
+    command:
+      /seed/import.sh
+    depends_on:
+      no-sql:
+        condition: service_healthy
+  no-sql-admin:
+    container_name: no-sql-admin
+    image: mongoclient/mongoclient
+    environment:
+      - MONGO_URL=mongodb://kenoby:12345@no-sql:27017/admin
+    ports:
+      - 9001:3000
+    expose:
+      - 9001
+    depends_on:
+      no-sql:
+        condition: service_healthy

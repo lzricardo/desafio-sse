@@ -1,0 +1,17 @@
+#!/bin/bash
+
+URI="mongodb://kenoby:12345@no-sql:27017/kenoby?authSource=admin"
+TOTAL_APPLICANTS=$(mongo $URI --eval "db.applicants.count({});" --quiet)
+TOTAL_POSITIONS=$(mongo $URI --eval "db.positions.count({});" --quiet)
+
+if [ $TOTAL_APPLICANTS -lt 30000 ]
+then
+  echo "Importing applicants"
+  mongoimport --uri $URI --collection applicants --type json --file /seed/applicants.json --jsonArray
+fi
+
+if [ $TOTAL_POSITIONS -lt 5000 ]
+then
+  echo "Importing positions"
+  mongoimport --uri $URI --collection positions --type json --file /seed/positions.json --jsonArray
+fi

@@ -1,0 +1,33 @@
+version: "2.1"
+
+services:
+  sql:
+    container_name: sql-db
+    image: postgres
+    user: root
+    environment:
+      - POSTGRES_DB=kenoby
+      - POSTGRES_USER=kenoby
+      - POSTGRES_PASSWORD=12345
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./insert_applicants.sql:/docker-entrypoint-initdb.d/1-insert_applicants.sql
+      - ./insert_positions.sql:/docker-entrypoint-initdb.d/3-insert_positions.sql
+      - ../../data/sql:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+  sql-admin:
+    container_name: sql-admin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=12345
+      - PGADMIN_BIND_ADDRESS=sql
+    ports:
+      - 9000:80
+    expose:
+      - 9000
+    depends_on:
+      - sql
