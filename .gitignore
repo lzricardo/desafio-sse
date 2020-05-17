@@ -1,2 +1,5 @@
 data/sql
 data/no-sql
+
+# Jetbrains's file
+.idea
