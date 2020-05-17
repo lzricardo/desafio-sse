@@ -1,0 +1,32 @@
+{
+  "name": "desafio-sse",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git@github.com:lzricardo/desafio-sse.git",
+  "author": "lzricardo <lzricardo.ecomp@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production ./node_modules/pm2/bin/pm2-runtime src/server.js --name Kenoby API",
+    "dev": "NODE_ENV=development nodemon src/server.js --ignore __tests__",
+    "pretest": "NODE_ENV=test sequelize db:migrate",
+    "test": "NODE_ENV=test jest",
+    "postest": "NODE_ENV=test sequelize db:migrate:undo:all"
+  },
+  "private": true,
+  "devDependencies": {
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "^5.5.1",
+    "sqlite3": "^4.2.0",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "@sentry/node": "^5.15.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.5.0",
+    "helmet": "^3.22.0",
+    "pm2": "^4.4.0",
+    "request": "^2.88.2",
+    "sequelize": "^5.21.9"
+  }
+}
