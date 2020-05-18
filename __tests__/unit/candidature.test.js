@@ -1,4 +1,9 @@
 const { Candidature } = require('../../src/app/models');
+const truncate = require('../utils/truncate');
+
+beforeEach(async () => {
+    await truncate();
+});
 
 describe('Candidature\'s model\'s operations', () => {
     it('should be persist a candidature',  async (done) => {
@@ -22,7 +27,6 @@ describe('Candidature\'s model\'s operations', () => {
             situation: 'hired',
         }).catch(e => {
             expect(e.message).toMatch('error');
-            done();
         });
 
         await Candidature.create({
@@ -30,7 +34,6 @@ describe('Candidature\'s model\'s operations', () => {
             situation: 'hired',
         }).catch(e => {
             expect(e.message).toMatch('error');
-            done();
         });
 
         await Candidature.create({
@@ -38,8 +41,8 @@ describe('Candidature\'s model\'s operations', () => {
             position_name: 'Senior Software Engineer',
         }).catch(e => {
             expect(e.message).toMatch('error');
-            done();
         });
+        done();
     });
 
     it('should be send message error for save candidature with invalid value for any fields', async (done) => {

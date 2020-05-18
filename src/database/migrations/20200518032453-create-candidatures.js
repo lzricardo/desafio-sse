@@ -19,11 +19,11 @@ module.exports = {
         type: Sequelize.ENUM('assessing', 'hired', 'incompatible'),
         defaultValue: 'assessing'
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

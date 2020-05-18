@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     position_name: {
       type: DataTypes.STRING,
       validate: {
+        is: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/i,
         notEmpty: true,
-        isAlpha: true
       }
     },
     situation: {
-      type: Sequelize.ENUM('assessing', 'hired', 'incompatible'),
+      type: DataTypes.ENUM('assessing', 'hired', 'incompatible'),
       isIn: [['assessing', 'hired', 'incompatible']]
     }
   }, {});
