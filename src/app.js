@@ -28,8 +28,8 @@ class AppController {
         console.log('Setup routes');
 
         this.express.use(require('./routes/index'));
-        // this.express.use('/v1', require('./routes/v1'));
-        this.express.use('/v2', require('./routes/v2'));
+        this.express.use('/v1', require('./routes/v1'));
+        // this.express.use('/v2', require('./routes/v2'));
     }
 }
 

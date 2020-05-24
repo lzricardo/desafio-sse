@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     situation: {
       type: DataTypes.ENUM('assessing', 'hired', 'incompatible'),
-      isIn: [['assessing', 'hired', 'incompatible']]
+      validate: {
+        isIn: [['assessing', 'hired', 'incompatible']]
+      }
     }
   }, {});
   Candidature.associate = function(models) {

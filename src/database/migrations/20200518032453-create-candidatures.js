@@ -9,9 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       applicant_email: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       position_name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       situation: {
