@@ -1,20 +1,20 @@
 const { Candidature } = require('../../src/app/models');
-const truncate = require('../utils/truncate');
-
-beforeEach(async () => {
-    await truncate();
-});
-
-afterAll(async () => {
-    await truncate();
-});
+// const truncate = require('../utils/truncate');
+//
+// beforeEach(async () => {
+//     await truncate();
+// });
+//
+// afterAll(async () => {
+//     await truncate();
+// });
 
 describe('Candidature\'s model\'s operations', () => {
-    it('should be persist a candidature',  async (done) => {
+    it('should be persist a candidature',  async () => {
         const candidatureSaved = await Candidature.create({
-            applicant_email: 'lzricardo.ecomp@gmail.com',
+            applicant_email: 'anna.rodeiro@gmail.com',
             position_name: 'Senior Software Engineer',
-            situation: 'hired',
+            situation: 'hired'
         });
 
         const candidatureRecovered = await Candidature.findByPk(candidatureSaved.id);
@@ -22,7 +22,6 @@ describe('Candidature\'s model\'s operations', () => {
         expect(candidatureSaved.applicant_email).toBe(candidatureRecovered.applicant_email);
         expect(candidatureSaved.position_name).toBe(candidatureRecovered.position_name);
         expect(candidatureSaved.situation).toBe(candidatureRecovered.situation);
-        done();
     });
 
     it('should be send message error for save candidature without any required fields', async () => {
