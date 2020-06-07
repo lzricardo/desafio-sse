@@ -1,36 +1,16 @@
-const { validationResult } = require('express-validator');
 const ErrorMessageHelper = require('../../helpers/error-message');
 const RequestHelper = require('../../helpers/request');
-const { Candidature, sequelize } = require('../models');
+const { Candidature } = require('../models');
 
 class CandidatureController {
-    async store(req, res) {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            let statusCode = 400;
-
-            return res.status(statusCode).json(ErrorMessageHelper.process('RE', statusCode));
-        }
-
-        try {
-            return sequelize.transaction(t => {
-                return Candidature.create({
-
-                }, {transaction: t});
-            }).then(async candidature => {
-
-
-                return res.status(200).json({
-
-                });
-            }).catch(err => {
-                console.log('Rolled back database\'s operation');
-                console.error(err);
+    store(req, res) {
+        Candidature.bulkCreate(req.body, { validate: true, returning: true })
+            .then(candidatures => {
+                return res.status(200).json(candidatures);
+            })
+            .catch(errors => {
+                return res.status(500).json(errors);
             });
-        } catch (e) {
-            console.error(e);
-        }
     }
 }
 

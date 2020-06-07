@@ -1,12 +1,20 @@
 const v1 = require('express').Router();
 
 //Middlewares
-const CheckCandidaturePayload = require('../app/middlewares/CheckCandidaturePayload');
+
+//Candidature
+const CheckPayloadSchema = require('../app/middlewares/Candidature/CheckPayloadSchema');
 
 //Controllers
 const CandidatureController = require('../app/controllers/CandidatureController');
 
 //Routes
-v1.post('/candidatures', CheckCandidaturePayload, CandidatureController.store);
+v1.post(
+    '/candidatures',
+    [
+        CheckPayloadSchema,
+        CandidatureController.store
+    ]
+);
 
 module.exports = v1;

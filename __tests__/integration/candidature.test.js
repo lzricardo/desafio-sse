@@ -1,3 +1,6 @@
+require('../../src/config/constants');
+require('../../src/config/validator');
+
 const request = require('supertest');
 const app = require('../../src/app');
 const { Candidature } = require('../../src/app/models');
@@ -5,7 +8,7 @@ const { Candidature } = require('../../src/app/models');
 
 describe('Candidature\'s operations controller',() => {
     it('should be persist a candidature successfully', async () => {
-        const savedCandidature = await request(app)
+        const savedCandidatureResponse = await request(app)
             .post('/v1/candidatures')
             .send([
                 {
@@ -15,13 +18,17 @@ describe('Candidature\'s operations controller',() => {
                 }
             ]);
 
-        const recoveredCandidature = await Candidature.findByPk(savedCandidature.id);
+        expect(savedCandidatureResponse.status).toBe(200);
 
-        expect(savedCandidature.applicant_email).toBe(recoveredCandidature.applicant_email);
-        expect(savedCandidature.position_name).toBe(recoveredCandidature.position_name);
-        expect(savedCandidature.situation).toBe(recoveredCandidature.situation);
+        const recoveredCandidature = await Candidature.findByPk(savedCandidatureResponse.body[0].id);
 
-        const savedCandidatures = await request(app)
+        expect(savedCandidatureResponse.body[0].applicant_email).toBe(recoveredCandidature.applicant_email);
+        expect(savedCandidatureResponse.body[0].position_name).toBe(recoveredCandidature.position_name);
+        expect(savedCandidatureResponse.body[0].situation).toBe(recoveredCandidature.situation);
+
+        expect(savedCandidatureResponse.body.length).toBe(1);
+
+        const savedCandidaturesResponse = await request(app)
             .post('/v1/candidatures')
             .send([
                 {
@@ -36,31 +43,81 @@ describe('Candidature\'s operations controller',() => {
                 }
             ]);
 
-        const recoveredCandidature1 = await Candidature.findByPk(savedCandidatures[0].id);
-        const recoveredCandidature2 = await Candidature.findByPk(savedCandidatures[1].id);
+        expect(savedCandidaturesResponse.status).toBe(200);
 
-        expect(savedCandidature[0].applicant_email).toBe(recoveredCandidature1.applicant_email);
-        expect(savedCandidature[0].position_name).toBe(recoveredCandidature1.position_name);
-        expect(savedCandidature[0].situation).toBe(recoveredCandidature1.situation);
+        const recoveredCandidature1 = await Candidature.findByPk(savedCandidaturesResponse.body[0].id);
+        const recoveredCandidature2 = await Candidature.findByPk(savedCandidaturesResponse.body[1].id);
 
-        expect(savedCandidature[1].applicant_email).toBe(recoveredCandidature2.applicant_email);
-        expect(savedCandidature[1].position_name).toBe(recoveredCandidature2.position_name);
-        expect(savedCandidature[1].situation).toBe(recoveredCandidature2.situation);
+        expect(savedCandidaturesResponse.body[0].applicant_email).toBe(recoveredCandidature1.applicant_email);
+        expect(savedCandidaturesResponse.body[0].position_name).toBe(recoveredCandidature1.position_name);
+        expect(savedCandidaturesResponse.body[0].situation).toBe(recoveredCandidature1.situation);
+
+        expect(savedCandidaturesResponse.body[1].applicant_email).toBe(recoveredCandidature2.applicant_email);
+        expect(savedCandidaturesResponse.body[1].position_name).toBe(recoveredCandidature2.position_name);
+        expect(savedCandidaturesResponse.body[1].situation).toBe(recoveredCandidature2.situation);
+
+        expect(savedCandidaturesResponse.body.length).toBe(2);
     });
 
     it('should be send message error for save candidature without some required fields', async () => {
-        const candidatureEmptyResponse = await request(app)
+        const candidatureJustObjectEmptyInArrayResponse = await request(app)
             .post('/v1/candidatures')
             .send([{
 
             }]);
 
-        expect(candidatureEmptyResponse.status).toBe(400);
-        expect(candidatureEmptyResponse.body).toBe({
+        expect(candidatureJustObjectEmptyInArrayResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureJustObjectEmptyInArrayResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
+
+        const candidatureJustObjectEmptyResponse = await request(app)
+            .post('/v1/candidatures')
+            .send({
+
+            });
+
+        expect(candidatureJustObjectEmptyResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureJustObjectEmptyResponse.body)).toBe(JSON.stringify({
+            error: {
+                message: ''
+            }
+        }));
+
+        const candidatureNullResponse = await request(app)
+            .post('/v1/candidatures')
+            .send(null);
+
+        expect(candidatureNullResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureNullResponse.body)).toBe(JSON.stringify({
+            error: {
+                message: ''
+            }
+        }));
+
+        const candidatureUndefinedResponse = await request(app)
+            .post('/v1/candidatures')
+            .send(undefined);
+
+        expect(candidatureUndefinedResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureUndefinedResponse.body)).toBe(JSON.stringify({
+            error: {
+                message: ''
+            }
+        }));
+
+        const candidatureJustArrayEmptyResponse = await request(app)
+            .post('/v1/candidatures')
+            .send([]);
+
+        expect(candidatureJustArrayEmptyResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureJustArrayEmptyResponse.body)).toBe(JSON.stringify({
+            error: {
+                message: ''
+            }
+        }));
 
         const candidatureWithoutPositionResponse = await request(app)
             .post('/v1/candidatures')
@@ -69,12 +126,12 @@ describe('Candidature\'s operations controller',() => {
                 situation: 'hired',
             }]);
 
-        expect(candidatureWithoutPositionResponse.status).toBe(400);
-        expect(candidatureWithoutPositionResponse.body).toBe({
+        expect(candidatureWithoutPositionResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithoutPositionResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
 
         const candidatureWithoutSituationResponse = await request(app)
             .post('/v1/candidatures')
@@ -83,12 +140,12 @@ describe('Candidature\'s operations controller',() => {
                 position_name: 'Senior Software Engineer',
             }]);
 
-        expect(candidatureWithoutSituationResponse.status).toBe(400);
-        expect(candidatureWithoutSituationResponse.body).toBe({
+        expect(candidatureWithoutSituationResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithoutSituationResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 
     it('should be send message error for save candidature with invalid value for some fields', async () => {
@@ -100,12 +157,12 @@ describe('Candidature\'s operations controller',() => {
                 situation: 'hired',
             });
 
-        expect(candidatureWithoutArrayStructureResponse.status).toBe(400);
-        expect(candidatureWithoutArrayStructureResponse.body).toBe({
+        expect(candidatureWithoutArrayStructureResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithoutArrayStructureResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
 
         const candidatureWithInvalidSituationResponse = await request(app)
             .post('/v1/candidatures')
@@ -115,12 +172,12 @@ describe('Candidature\'s operations controller',() => {
                 situation: 1,
             }]);
 
-        expect(candidatureWithInvalidSituationResponse.status).toBe(400);
-        expect(candidatureWithInvalidSituationResponse.body).toBe({
+        expect(candidatureWithInvalidSituationResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithInvalidSituationResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
 
         const candidatureWithEmptyPositionResponse = await request(app)
             .post('/v1/candidatures')
@@ -130,12 +187,12 @@ describe('Candidature\'s operations controller',() => {
                 situation: 'hired',
             }]);
 
-        expect(candidatureWithEmptyPositionResponse.status).toBe(400);
-        expect(candidatureWithEmptyPositionResponse.body).toBe({
+        expect(candidatureWithEmptyPositionResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithEmptyPositionResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
 
         const candidatureWithInvalidEmailResponse = await request(app)
             .post('/v1/candidatures')
@@ -145,12 +202,12 @@ describe('Candidature\'s operations controller',() => {
                 situation: 'hired',
             }]);
 
-        expect(candidatureWithInvalidEmailResponse.status).toBe(400);
-        expect(candidatureWithInvalidEmailResponse.body).toBe({
+        expect(candidatureWithInvalidEmailResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithInvalidEmailResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
 
         const candidatureWithEmptyEmailResponse = await request(app)
             .post('/v1/candidatures')
@@ -160,12 +217,12 @@ describe('Candidature\'s operations controller',() => {
                 situation: 'hired',
             }]);
 
-        expect(candidatureWithEmptyEmailResponse.status).toBe(400);
-        expect(candidatureWithEmptyEmailResponse.body).toBe({
+        expect(candidatureWithEmptyEmailResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithEmptyEmailResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 });
 
@@ -181,12 +238,12 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-            expect(candidatureWithAplicantNotFoundResponse.status).toBe(400);
-            expect(candidatureWithAplicantNotFoundResponse.body).toBe({
-                error: {
-                    message: ''
-                }
-            });
+        expect(candidatureWithAplicantNotFoundResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithAplicantNotFoundResponse.body)).toBe(JSON.stringify({
+            error: {
+                message: ''
+            }
+        }));
     });
 
     it('should be send message error because position not exists', async () => {
@@ -200,12 +257,12 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithPositionNotFoundResponse.status).toBe(400);
-        expect(candidatureWithPositionNotFoundResponse.body).toBe({
+        expect(candidatureWithPositionNotFoundResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithPositionNotFoundResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 
     it('should be send message error because position have maxHired exceeded', async () => {
@@ -244,12 +301,12 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithAplicantMaxHiredExceededResponse.status).toBe(400);
-        expect(candidatureWithAplicantMaxHiredExceededResponse.body).toBe({
+        expect(candidatureWithAplicantMaxHiredExceededResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithAplicantMaxHiredExceededResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 
     it('should be send message error because position was deactivated', async () => {
@@ -263,12 +320,12 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithPositionWasDeactivatedResponse.status).toBe(400);
-        expect(candidatureWithPositionWasDeactivatedResponse.body).toBe({
+        expect(candidatureWithPositionWasDeactivatedResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithPositionWasDeactivatedResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 
     it('should be send message error because applicant was deactivated', async () => {
@@ -282,12 +339,12 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithAplicantWasDeactivatedResponse.status).toBe(400);
-        expect(candidatureWithAplicantWasDeactivatedResponse.body).toBe({
+        expect(candidatureWithAplicantWasDeactivatedResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithAplicantWasDeactivatedResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 
     it('should be send message error because candidature is duplicated', async () => {
@@ -301,12 +358,12 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithDuplicationResponse.status).toBe(400);
-        expect(candidatureWithDuplicationResponse.body).toBe({
+        expect(candidatureWithDuplicationResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithDuplicationResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 
     it('should be send message error because batch candidates greater than value max allowed', async () => {
@@ -465,11 +522,11 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidaturesWithBatchGreaterThanMaxValueResponse.status).toBe(400);
-        expect(candidaturesWithBatchGreaterThanMaxValueResponse.body).toBe({
+        expect(candidaturesWithBatchGreaterThanMaxValueResponse.status).toBe(422);
+        expect(JSON.stringify(candidaturesWithBatchGreaterThanMaxValueResponse.body)).toBe(JSON.stringify({
             error: {
                 message: ''
             }
-        });
+        }));
     });
 });
