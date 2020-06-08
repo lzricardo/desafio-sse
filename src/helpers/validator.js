@@ -16,7 +16,7 @@ class Validator {
                         position_name: Joi.string().pattern(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/i).required(),
                         situation: Joi.string().valid('assessing', 'hired', 'incompatible').required()
                     }).required()
-                ).required().min(1).max(25)
+                ).required().min(1).max(25).unique((a, b) => (a.applicant_email === b.applicant_email && a.position_name === b.position_name))
             },
         ];
     }

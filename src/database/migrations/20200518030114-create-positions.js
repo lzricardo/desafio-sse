@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.ENUM('active', 'inactive'),
         defaultValue: 'active'
       },
-      maxHired: {
+      max_hired: {
         allowNull: false,
         defaultValue: 0,
         type: Sequelize.INTEGER

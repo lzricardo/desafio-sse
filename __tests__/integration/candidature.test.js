@@ -164,6 +164,28 @@ describe('Candidature\'s operations controller',() => {
             }
         }));
 
+        const candidatureWithDuplicatedElementInArrayResponse = await request(app)
+            .post('/v1/candidatures')
+            .send([
+                {
+                    applicant_email: 'lzricardo.ecomp@gmail.com',
+                    position_name: 'Senior Software Engineer',
+                    situation: 'assessing',
+                },
+                {
+                    applicant_email: 'lzricardo.ecomp@gmail.com',
+                    position_name: 'Senior Software Engineer',
+                    situation: 'hired',
+                },
+            ]);
+
+        expect(candidatureWithDuplicatedElementInArrayResponse.status).toBe(422);
+        expect(JSON.stringify(candidatureWithDuplicatedElementInArrayResponse.body)).toBe(JSON.stringify({
+            error: {
+                message: ''
+            }
+        }));
+
         const candidatureWithInvalidSituationResponse = await request(app)
             .post('/v1/candidatures')
             .send([{
@@ -304,7 +326,8 @@ describe('Particular cases for Candidature\'s operations controller',() => {
         expect(candidatureWithAplicantMaxHiredExceededResponse.status).toBe(422);
         expect(JSON.stringify(candidatureWithAplicantMaxHiredExceededResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: '',
+                positions: ['Luke McKinney']
             }
         }));
     });

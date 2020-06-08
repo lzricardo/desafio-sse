@@ -46,7 +46,7 @@ describe('Candidature\'s model\'s operations', () => {
         //This don't throw error because exist default situation.
         try {
             await Candidature.create({
-                applicant_email: 'lzricardo.ecomp@gmail.com',
+                applicant_email: 'luan.lima@gmail.com',
                 position_name: 'Senior Software Engineer',
             });
         } catch (e) {
