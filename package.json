@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "repository": "git@github.com:lzricardo/desafio-sse.git",
-  "author": "lzricardo <lzricardo.ecomp@gmail.com>",
+  "author": "Luiz Ricardo <lzricardo.ecomp@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=production ./node_modules/pm2/bin/pm2-runtime src/server.js --name Kenoby API",
@@ -21,6 +21,7 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "7.6.0",
     "@hapi/joi": "^17.1.1",
     "@sentry/node": "^5.15.5",
     "dotenv": "^8.2.0",

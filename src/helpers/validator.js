@@ -16,7 +16,7 @@ class Validator {
                         position_name: Joi.string().pattern(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/i).required(),
                         situation: Joi.string().valid('assessing', 'hired', 'incompatible').required()
                     }).required()
-                ).required().min(1).max(25).unique((a, b) => (a.applicant_email === b.applicant_email && a.position_name === b.position_name))
+                ).required().min(1).max(parseInt(process.env.APP_CANDIDATURES_BATCH_MAX_SIZE)).unique((a, b) => (a.applicant_email === b.applicant_email && a.position_name === b.position_name))
             },
         ];
     }
@@ -53,7 +53,7 @@ class Validator {
         if (result.hasOwnProperty('error')) {
             console.log(`[VALIDATOR] Object JSON invalid => rule: ${rule}, object: ${JSON.stringify(object)}, errors: ${result.error}`);
 
-            return true;
+            return result.error;
         } else {
             return false;
         }

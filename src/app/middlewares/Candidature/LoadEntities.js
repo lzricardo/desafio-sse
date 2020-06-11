@@ -24,7 +24,13 @@ module.exports = async (req, res, next) => {
     } catch (e) {
         console.error(e);
 
-        return res.status(500).json(e);
+        return res.status(500).json(
+            {
+                error: {
+                    message: 'Server internal error. Contact the administrator.'
+                }
+            }
+        );
     }
 
     return next();

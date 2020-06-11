@@ -22,8 +22,19 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
+
   Candidature.associate = function(models) {
     // associations can be defined here
   };
+
+  Candidature.addHook('afterBulkCreate', (candidatures, options) => {
+    // ElasticSearch.bulk(candidatures, {index: 'kenoby', type: 'candidatures'})
+    //     .then()
+    //     .catch();
+
+    console.log('calling hook afterBulkCreate => ', candidatures);
+    console.log('options => ', options);
+  });
+
   return Candidature;
 };

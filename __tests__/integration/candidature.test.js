@@ -1,3 +1,4 @@
+require('../../src/config/environment');
 require('../../src/config/constants');
 require('../../src/config/validator');
 
@@ -67,11 +68,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureJustObjectEmptyInArrayResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureJustObjectEmptyInArrayResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureJustObjectEmptyInArrayResponse.body.error).not.toBeNull();
+        expect(candidatureJustObjectEmptyInArrayResponse.body.error.message).not.toBeNull();
+        expect(candidatureJustObjectEmptyInArrayResponse.body.error.validation).not.toBeNull();
+        expect(candidatureJustObjectEmptyInArrayResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureJustObjectEmptyInArrayResponse.body.error.validation).toContain('is required');
 
         const candidatureJustObjectEmptyResponse = await request(app)
             .post('/v1/candidatures')
@@ -80,44 +81,45 @@ describe('Candidature\'s operations controller',() => {
             });
 
         expect(candidatureJustObjectEmptyResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureJustObjectEmptyResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureJustObjectEmptyResponse.body.error).not.toBeNull();
+        expect(candidatureJustObjectEmptyResponse.body.error.message).not.toBeNull();
+        expect(candidatureJustObjectEmptyResponse.body.error.validation).not.toBeNull();
+        expect(candidatureJustObjectEmptyResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureJustObjectEmptyResponse.body.error.validation).toContain('must be an array');
+
 
         const candidatureNullResponse = await request(app)
             .post('/v1/candidatures')
             .send(null);
 
         expect(candidatureNullResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureNullResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureNullResponse.body.error).not.toBeNull();
+        expect(candidatureNullResponse.body.error.message).not.toBeNull();
+        expect(candidatureNullResponse.body.error.validation).not.toBeNull();
+        expect(candidatureNullResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureNullResponse.body.error.validation).toContain('must be an array');
 
         const candidatureUndefinedResponse = await request(app)
             .post('/v1/candidatures')
             .send(undefined);
 
         expect(candidatureUndefinedResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureUndefinedResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureUndefinedResponse.body.error).not.toBeNull();
+        expect(candidatureUndefinedResponse.body.error.message).not.toBeNull();
+        expect(candidatureUndefinedResponse.body.error.validation).not.toBeNull();
+        expect(candidatureUndefinedResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureUndefinedResponse.body.error.validation).toContain('must be an array');
 
         const candidatureJustArrayEmptyResponse = await request(app)
             .post('/v1/candidatures')
             .send([]);
 
         expect(candidatureJustArrayEmptyResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureJustArrayEmptyResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureJustArrayEmptyResponse.body.error).not.toBeNull();
+        expect(candidatureJustArrayEmptyResponse.body.error.message).not.toBeNull();
+        expect(candidatureJustArrayEmptyResponse.body.error.validation).not.toBeNull();
+        expect(candidatureJustArrayEmptyResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureJustArrayEmptyResponse.body.error.validation).toContain('does not contain 1 required value(s)');
 
         const candidatureWithoutPositionResponse = await request(app)
             .post('/v1/candidatures')
@@ -127,11 +129,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureWithoutPositionResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithoutPositionResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithoutPositionResponse.body.error).not.toBeNull();
+        expect(candidatureWithoutPositionResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithoutPositionResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithoutPositionResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithoutPositionResponse.body.error.validation).toContain('is required');
 
         const candidatureWithoutSituationResponse = await request(app)
             .post('/v1/candidatures')
@@ -141,11 +143,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureWithoutSituationResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithoutSituationResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithoutSituationResponse.body.error).not.toBeNull();
+        expect(candidatureWithoutSituationResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithoutSituationResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithoutSituationResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithoutSituationResponse.body.error.validation).toContain('is required');
     });
 
     it('should be send message error for save candidature with invalid value for some fields', async () => {
@@ -160,7 +162,8 @@ describe('Candidature\'s operations controller',() => {
         expect(candidatureWithoutArrayStructureResponse.status).toBe(422);
         expect(JSON.stringify(candidatureWithoutArrayStructureResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Request body schema invalid.',
+                validation: '"value" must be an array'
             }
         }));
 
@@ -180,11 +183,11 @@ describe('Candidature\'s operations controller',() => {
             ]);
 
         expect(candidatureWithDuplicatedElementInArrayResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithDuplicatedElementInArrayResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithDuplicatedElementInArrayResponse.body.error).not.toBeNull();
+        expect(candidatureWithDuplicatedElementInArrayResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithDuplicatedElementInArrayResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithDuplicatedElementInArrayResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithDuplicatedElementInArrayResponse.body.error.validation).toContain('contains a duplicate value');
 
         const candidatureWithInvalidSituationResponse = await request(app)
             .post('/v1/candidatures')
@@ -195,11 +198,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureWithInvalidSituationResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithInvalidSituationResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithInvalidSituationResponse.body.error).not.toBeNull();
+        expect(candidatureWithInvalidSituationResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithInvalidSituationResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithInvalidSituationResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithInvalidSituationResponse.body.error.validation).toContain('must be one of [assessing, hired, incompatible]');
 
         const candidatureWithEmptyPositionResponse = await request(app)
             .post('/v1/candidatures')
@@ -210,11 +213,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureWithEmptyPositionResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithEmptyPositionResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithEmptyPositionResponse.body.error).not.toBeNull();
+        expect(candidatureWithEmptyPositionResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithEmptyPositionResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithEmptyPositionResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithEmptyPositionResponse.body.error.validation).toContain('is not allowed to be empty');
 
         const candidatureWithInvalidEmailResponse = await request(app)
             .post('/v1/candidatures')
@@ -225,11 +228,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureWithInvalidEmailResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithInvalidEmailResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithInvalidEmailResponse.body.error).not.toBeNull();
+        expect(candidatureWithInvalidEmailResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithInvalidEmailResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithInvalidEmailResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithInvalidEmailResponse.body.error.validation).toContain('must be a valid email');
 
         const candidatureWithEmptyEmailResponse = await request(app)
             .post('/v1/candidatures')
@@ -240,11 +243,11 @@ describe('Candidature\'s operations controller',() => {
             }]);
 
         expect(candidatureWithEmptyEmailResponse.status).toBe(422);
-        expect(JSON.stringify(candidatureWithEmptyEmailResponse.body)).toBe(JSON.stringify({
-            error: {
-                message: ''
-            }
-        }));
+        expect(candidatureWithEmptyEmailResponse.body.error).not.toBeNull();
+        expect(candidatureWithEmptyEmailResponse.body.error.message).not.toBeNull();
+        expect(candidatureWithEmptyEmailResponse.body.error.validation).not.toBeNull();
+        expect(candidatureWithEmptyEmailResponse.body.error.message).toBe('Request body schema invalid.');
+        expect(candidatureWithEmptyEmailResponse.body.error.validation).toContain('is not allowed to be empty');
     });
 });
 
@@ -260,10 +263,10 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithAplicantNotFoundResponse.status).toBe(422);
+        expect(candidatureWithAplicantNotFoundResponse.status).toBe(404);
         expect(JSON.stringify(candidatureWithAplicantNotFoundResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Applicants or positions not found.'
             }
         }));
     });
@@ -279,10 +282,10 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithPositionNotFoundResponse.status).toBe(422);
+        expect(candidatureWithPositionNotFoundResponse.status).toBe(404);
         expect(JSON.stringify(candidatureWithPositionNotFoundResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Applicants or positions not found.'
             }
         }));
     });
@@ -326,7 +329,7 @@ describe('Particular cases for Candidature\'s operations controller',() => {
         expect(candidatureWithAplicantMaxHiredExceededResponse.status).toBe(422);
         expect(JSON.stringify(candidatureWithAplicantMaxHiredExceededResponse.body)).toBe(JSON.stringify({
             error: {
-                message: '',
+                message: 'Max candidature by positions exceeded.',
                 positions: ['Luke McKinney']
             }
         }));
@@ -343,10 +346,10 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithPositionWasDeactivatedResponse.status).toBe(422);
+        expect(candidatureWithPositionWasDeactivatedResponse.status).toBe(404);
         expect(JSON.stringify(candidatureWithPositionWasDeactivatedResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Applicants or positions not found.'
             }
         }));
     });
@@ -362,10 +365,10 @@ describe('Particular cases for Candidature\'s operations controller',() => {
                 }
             ]);
 
-        expect(candidatureWithAplicantWasDeactivatedResponse.status).toBe(422);
+        expect(candidatureWithAplicantWasDeactivatedResponse.status).toBe(404);
         expect(JSON.stringify(candidatureWithAplicantWasDeactivatedResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Applicants or positions not found.'
             }
         }));
     });
@@ -384,7 +387,7 @@ describe('Particular cases for Candidature\'s operations controller',() => {
         expect(candidatureWithDuplicationResponse.status).toBe(422);
         expect(JSON.stringify(candidatureWithDuplicationResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Duplicated candidature(s) exists.'
             }
         }));
     });
@@ -548,7 +551,8 @@ describe('Particular cases for Candidature\'s operations controller',() => {
         expect(candidaturesWithBatchGreaterThanMaxValueResponse.status).toBe(422);
         expect(JSON.stringify(candidaturesWithBatchGreaterThanMaxValueResponse.body)).toBe(JSON.stringify({
             error: {
-                message: ''
+                message: 'Request body schema invalid.',
+                validation: '"value" must contain less than or equal to 25 items'
             }
         }));
     });
