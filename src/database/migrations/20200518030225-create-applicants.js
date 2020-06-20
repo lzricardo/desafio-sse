@@ -13,7 +13,7 @@ module.exports = {
           type: Sequelize.STRING
         },
         status: {
-          type: Sequelize.ENUM('active', 'inactive'),
+          type: Sequelize.ENUM('active', 'disabled'),
           defaultValue: 'active'
         },
         email: {

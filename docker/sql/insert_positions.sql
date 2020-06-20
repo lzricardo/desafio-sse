@@ -1,7 +1,11 @@
 
+  INSERT INTO positions (name, max_hired, status) VALUES ('Eugene Stephens', 279, 'disabled');
+
   INSERT INTO positions (name, max_hired) VALUES
-    ('Luke McKinney', 216),
-    ('Eugene Stephens', 279),
+    ('HR Supervisor', 10),
+    ('Chief Technology Officer', 10),
+    ('Senior Software Engineer', 10),
+    ('Luke McKinney', 5),
     ('Mayme Baldwin', 258),
     ('Lester Hammond', 84),
     ('Miguel Reid', 85),

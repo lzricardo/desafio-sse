@@ -24,11 +24,12 @@ module.exports = async (req, res, next) => {
         });
 
         res.locals.loadedPositions.forEach(position => {
-            let countNewHired = res.locals.maxHiredByCandidature.get(position.name);
+            let position_name = position.name.trim();
+            let countNewHired = res.locals.maxHiredByCandidature.get(position_name);
             let countHired = hiredByPosition.get(position.name) || 0;
 
             if (countNewHired + countHired > position.maxHired) {
-                exceededPositions.push(position.name);
+                exceededPositions.push(position_name);
             }
         });
 

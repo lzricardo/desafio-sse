@@ -15,7 +15,7 @@ module.exports = {
         },
         status: {
           allowNull: false,
-          type: Sequelize.ENUM('active', 'inactive'),
+          type: Sequelize.ENUM('active', 'disabled'),
           defaultValue: 'active'
         },
         max_hired: {

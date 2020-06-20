@@ -1,6 +1,10 @@
 
+  INSERT INTO applicants (name, email, status) VALUES ('Katie Greene', 'ohazo@dajfa.mc', 'disabled');
+
   INSERT INTO applicants (name, email) VALUES
-    ('Katie Greene', 'ohazo@dajfa.mc'),
+    ('Luiz Ricardo', 'lzricardo.ecomp@gmail.com'),
+    ('Eduardo Zagari', 'eduardo.zagari@kenoby.com'),
+    ('Tatiante Mesquita', 'tatiane.mesquita@kenoby.com'),
     ('Billy Norris', 'wip@leg.pf'),
     ('Lois Andrews', 'to@fut.gw'),
     ('Josephine McBride', 'vuage@focpowhet.bg'),

@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Position = sequelize.define('Position', {
     name: DataTypes.STRING,
-    status: DataTypes.ENUM('active', 'inactive'),
+    status: DataTypes.ENUM('active', 'disabled'),
     maxHired: DataTypes.INTEGER
   }, {});
   Position.associate = function(models) {

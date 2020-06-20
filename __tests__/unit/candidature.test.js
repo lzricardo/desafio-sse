@@ -29,7 +29,7 @@ describe('Candidature\'s model\'s operations', () => {
             await Candidature.create({
             })
         } catch (e) {
-            expect(e.message).toMatch('error');
+            expect(e.message).toMatch(/error|violates not-null constraint/);
         }
 
         try {
@@ -38,7 +38,7 @@ describe('Candidature\'s model\'s operations', () => {
                 situation: 'hired',
             });
         } catch (e) {
-            expect(e.message).toMatch('error');
+            expect(e.message).toMatch(/error|violates not-null constraint/);
         }
 
         let mockDontExecute = jest.fn();
