@@ -1,12 +1,12 @@
 module.exports = (req, res, next) => {
     try {
-        const resultValidator = validator.execute(VALIDATOR_RULE_PAYLOAD_CANDIDATURE_KENOBY, req.body);
+        const resultValidator = validator.execute(VALIDATOR_RULE_QUERY_PARAM_CANDIDATURE_KENOBY, req.query);
 
         if (resultValidator) {
             return res.status(422).json(
                 {
                     error: {
-                        message: 'Request body schema invalid.',
+                        message: 'Request query params schema invalid.',
                         validation: resultValidator.message
                     }
                 }

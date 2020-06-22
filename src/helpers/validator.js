@@ -10,7 +10,7 @@ class Validator {
     _initializeSchemas() {
         return [
             {
-                [VALIDATOR_RULE_PAYLOAD_CANDIDATURE_KENOBY] : Joi.array().items(
+                [VALIDATOR_RULE_PAYLOAD_CANDIDATURE_KENOBY]: Joi.array().items(
                     Joi.object({
                         applicant_email: Joi.string().email().required(),
                         position_name: Joi.string().pattern(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/i).required(),
@@ -18,6 +18,12 @@ class Validator {
                     }).required()
                 ).required().min(1).max(parseInt(process.env.APP_CANDIDATURES_BATCH_MAX_SIZE)).unique((a, b) => (a.applicant_email === b.applicant_email && a.position_name === b.position_name))
             },
+            {
+                [VALIDATOR_RULE_QUERY_PARAM_CANDIDATURE_KENOBY]: Joi.object({
+                    applicant_email: Joi.string().email(),
+                    position_name: Joi.string().pattern(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/i),
+                }).or('applicant_email', 'position_name').required()
+            }
         ];
     }
 
@@ -26,7 +32,7 @@ class Validator {
             return schema.hasOwnProperty(rule)
         });
 
-        if(result.length > 0) {
+        if (result.length > 0) {
             return result[0][rule];
         } else {
             throw new ValidatorRuleNotFoundError('Rule not found');

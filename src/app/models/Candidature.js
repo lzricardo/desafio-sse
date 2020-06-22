@@ -28,9 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     Candidature.addHook('afterBulkCreate', (candidatures, options) => {
-        ElasticSearch.bulk(candidatures, {index: 'kenoby', type: 'candidatures'})
-            .then(() => {
+        const candidaturesSet = candidatures.map(candidature => candidature.get({plain: true}));
 
+        console.log('Pushing to Elastic Search, candidatures => ', candidaturesSet);
+
+        ElasticSearch.bulk(candidaturesSet, {index: 'kenoby'})
+            .then(() => {
+                console.log('Pushed to Elastic Search');
             })
             .catch(reason => {
                 console.error(reason);

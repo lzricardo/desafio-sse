@@ -14,7 +14,7 @@ class ElasticSearchService {
             return;
         }
 
-        if (Array.isArray(dataset)) {
+        if (!Array.isArray(dataset)) {
             throw new ElasticSearchInvalidParamError(`Expected an array to dataset param got ${typeof dataset}`);
         }
 
@@ -51,8 +51,6 @@ class ElasticSearchService {
 
         const {body: count} = await this.client.count({index: params.index});
 
-        console.log(count);
-
         return count;
     }
 
@@ -63,12 +61,8 @@ class ElasticSearchService {
     }
 
     _validParams(params) {
-        if (params.index) {
+        if (!params.index) {
             throw new ElasticSearchRequiredParamError('Expected index attribute into params object');
-        }
-
-        if (params.type) {
-            throw new ElasticSearchRequiredParamError('Expected type attribute into params object');
         }
     }
 }
