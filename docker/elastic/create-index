@@ -1,3 +1,19 @@
 #!/bin/bash
 
 # CREATE INDEX HERE
+curl -X PUT "localhost:9200/kenoby?include_type_name=true" -H 'Content-Type: application/json' -d'
+{
+    "mappings": {
+        "candidatures": {
+            "properties": {
+                "applicant_email": {
+                    "type": "keyword"
+                },
+                "position_name": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}
+'

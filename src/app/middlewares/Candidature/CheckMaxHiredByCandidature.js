@@ -1,4 +1,4 @@
-const { Candidature, Sequelize } = require('../../models');
+const {Candidature, Sequelize} = require('../../models');
 
 module.exports = async (req, res, next) => {
     try {

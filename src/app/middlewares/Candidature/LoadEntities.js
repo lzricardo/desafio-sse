@@ -1,4 +1,4 @@
-const { Position, Applicant, Op } = require('../../models');
+const {Position, Applicant, Op} = require('../../models');
 
 module.exports = async (req, res, next) => {
     try {

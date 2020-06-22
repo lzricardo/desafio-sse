@@ -9,5 +9,5 @@ if (result.error) {
 }
 
 if (process.env.APP_ENV === 'development') {
-    console.log(`[DEBUG_DEVELOPMENT] Environment variables=> ${JSON.stringify(result.parsed)}` );
+    console.log(`[DEBUG_DEVELOPMENT] Environment variables=> ${JSON.stringify(result.parsed)}`);
 }

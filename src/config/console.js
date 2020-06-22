@@ -2,7 +2,7 @@ const Sentry = require('./sentry');
 
 console.log('[SYSTEM] Setup and override console.log and console.error');
 
-(function(){
+(function () {
     let _error = console.error;
 
     console.error = function (error) {

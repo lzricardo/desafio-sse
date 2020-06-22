@@ -1,5 +1,6 @@
-require('../../src/config/environment');
 require('../../src/config/constants');
+require('../../src/config/environment');
+require('../../src/config/globals');
 require('../../src/config/validator');
 
 const request = require('supertest');
